@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Book;
 use Illuminate\Http\Request;
-use App\Http\{
-    Controllers\Controller,
-    Resources\V1\Book\ShowResource,
-};
 
 class BookController extends BaseController
 {
@@ -19,17 +14,6 @@ class BookController extends BaseController
     public function store(Request $request)
     {
         //
-    }
-
-    public function show(string $id)
-    {
-        try {
-            return new ShowResource(Book::detail()->findOrFail($id));
-        } catch (\Exception $exception) {
-            report($exception);
-
-            // [TODO] response
-        }
     }
 
     /**

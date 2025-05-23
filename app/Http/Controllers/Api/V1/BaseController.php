@@ -11,13 +11,30 @@ class BaseController extends Controller
 
     protected string $entity = 'Book';
 
+    protected function getModelNamespace(): string
+    {
+        return "\App\\Models\\{$this->entity}";
+    }
+
     public function index(Request $request)
     {
         try {
-            $namespace = "\App\\Http\\Resources\\V1\\{$this->entity}\\IndexResource";
-            $model = "\App\\Models\\{$this->entity}";
+            $resource = "\App\\Http\\Resources\\V1\\{$this->entity}\\IndexResource";
 
-            return $namespace::collection(resource: $model::listing($request)->paginate($request->limit ?? self::DEFAULT_LIMIT));
+            return $resource::collection(resource: $this->getModelNamespace()::listing($request)->paginate($request->limit ?? self::DEFAULT_LIMIT));
+        } catch (\Exception $exception) {
+            report($exception);
+
+            // [TODO] response
+        }
+    }
+
+    public function show(string $id)
+    {
+        try {
+            $resource = "\App\\Http\\Resources\\V1\\{$this->entity}\\ShowResource";
+
+            return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
         } catch (\Exception $exception) {
             report($exception);
 

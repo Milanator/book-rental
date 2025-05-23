@@ -5,7 +5,7 @@ namespace App\Http\Resources\V1\Author;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexResource extends JsonResource
+class ShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,6 @@ class IndexResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return $this->only(['id', 'full_name', 'books_count']);
+        return $this->only(['id', 'name', 'surname']);
     }
 }

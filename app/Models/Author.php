@@ -49,4 +49,10 @@ class Author extends Model
             ->when($request->surname, fn(Builder $query) => $query->where('surname', 'LIKE', "{$request->surname}%"))
             ->orderByDesc('id');
     }
+
+    #[Scope]
+    protected function detail(Builder $query): void
+    {
+        $query->select('id', 'name', 'surname');
+    }
 }
