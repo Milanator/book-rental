@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AuthorController extends Controller
+class AuthorController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+    protected string $entity = 'Author';
 
     /**
      * Store a newly created resource in storage.
