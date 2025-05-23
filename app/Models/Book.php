@@ -2,8 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Database\{
+    Eloquent\Model,
+    Eloquent\Relations\BelongsTo,
+    Eloquent\Attributes\Scope,
+};
 
 class Book extends Model
 {
@@ -16,11 +21,29 @@ class Book extends Model
     /**
      * Relations
      */
-    /**
-     * @return BelongsTo
-     */
     public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
+    }
+
+    /**
+     * Scopes
+     */
+    #[Scope]
+    protected function listing(Builder $query, Request $request): void
+    {
+        $query
+            ->select('id', 'title', 'author_id', 'is_borrowed')
+            ->with('author:id,name,surname')
+            ->when($request->title, fn(Builder $query) => $query->where('title', 'LIKE', "{$request->title}%"))
+            ->orderByDesc('id');
+    }
+
+    #[Scope]
+    protected function detail(Builder $query): void
+    {
+        $query
+            ->select('id', 'title', 'author_id', 'is_borrowed')
+            ->with('author:id,name,surname');
     }
 }

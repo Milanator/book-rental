@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Models\Book;
 use Illuminate\Http\Request;
+use App\Http\{
+    Controllers\Controller,
+    Resources\V1\IndexResource,
+    Resources\V1\ShowResource,
+};
 
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * 
+     * @return [type]
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            return IndexResource::collection(Book::listing($request)->paginate(10));
+        } catch (\Exception $exception) {
+            report($exception);
+
+            // [TODO] response
+        }
     }
 
     /**
@@ -28,7 +41,13 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            return new ShowResource(Book::detail()->findOrFail($id));
+        } catch (\Exception $exception) {
+            report($exception);
+
+            // [TODO] response
+        }
     }
 
     /**
