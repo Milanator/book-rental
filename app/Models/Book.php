@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Observers\BookObserver;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Database\{
     Eloquent\Model,
     Eloquent\Relations\BelongsTo,
     Eloquent\Attributes\Scope,
+    Eloquent\Attributes\ObservedBy,
 };
 
+#[ObservedBy([BookObserver::class])]
 class Book extends Model
 {
     protected $fillable = [

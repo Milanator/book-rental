@@ -3,25 +3,36 @@ import axios from "@/plugins/axios";
 
 export const useBookStore = defineStore("book", {
     state: () => ({
-        books: [],
-        loading: false,
+        data: [],
         error: null,
+        page: null,
     }),
 
     actions: {
-        async fetchAll() {
-            this.loading = true;
+        async fetchAll(page = 1) {
             this.error = null;
+            this.page = page;
 
             try {
-                const response = await axios.get("/book");
+                const response = await axios.get(`/book?page=${page}`);
 
-                this.books = response.data.data ?? response.data;
+                this.data = response.data;
             } catch (err) {
                 this.error = "Nepodarilo sa načítať autorov.";
                 console.error(err);
-            } finally {
-                this.loading = false;
+            }
+        },
+
+        async borrow(book) {
+            this.error = null;
+
+            try {
+                axios
+                    .get(`/book/${book}/borrow`)
+                    .then(() => this.fetchAll(this.page));
+            } catch (err) {
+                this.error = "Nepodarilo sa zmeniť stav.";
+                console.error(err);
             }
         },
     },

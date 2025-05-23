@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Observers\AuthorObserver;
 use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Database\{
+    Eloquent\Attributes\ObservedBy,
+    Eloquent\Attributes\Scope,
+    Eloquent\Casts\Attribute,
+    Eloquent\Model,
+    Eloquent\Relations\HasMany,
+};
 
+#[ObservedBy([AuthorObserver::class])]
 class Author extends Model
 {
     protected $fillable = [

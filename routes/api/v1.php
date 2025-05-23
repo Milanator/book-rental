@@ -6,4 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('book', BookController::class);
 
+Route::get('/book/{book}/borrow', [BookController::class, 'borrow']);
+
 Route::apiResource('author', AuthorController::class);

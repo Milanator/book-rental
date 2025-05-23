@@ -14,6 +14,13 @@ export default defineConfig({
             input: ["resources/scss/app.scss", "resources/js/app.js"],
             refresh: true,
         }),
-        vue(),
+        vue({
+            template: {
+                compilerOptions: {
+                    isCustomElement: (tag) =>
+                        ["Bootstrap5Pagination"].includes(tag),
+                },
+            },
+        }),
     ],
 });

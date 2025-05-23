@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +33,13 @@ abstract class AbstractController extends Controller
         return $this->getModelNamespace()::listing($request)->paginate($request->limit ?? self::DEFAULT_LIMIT);
     }
 
+    protected function errorHandler(\Exception $exception): JsonResponse
+    {
+        report($exception);
+
+        return response()->json(['message' => $exception->getMessage(), 'status' => 0], 500);
+    }
+
     public function index(Request $request)
     {
         try {
@@ -46,9 +54,7 @@ abstract class AbstractController extends Controller
 
             return $resource::collection(resource: $data);
         } catch (\Exception $exception) {
-            report($exception);
-
-            // [TODO] response
+            $this->errorHandler($exception);
         }
     }
 
@@ -59,9 +65,7 @@ abstract class AbstractController extends Controller
 
             return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
         } catch (\Exception $exception) {
-            report($exception);
-
-            // [TODO] response
+            $this->errorHandler($exception);
         }
     }
 }
