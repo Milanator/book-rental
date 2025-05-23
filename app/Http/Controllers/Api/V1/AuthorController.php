@@ -4,9 +4,17 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 
-class AuthorController extends BaseController
+class AuthorController extends AbstractController
 {
-    protected string $entity = 'Author';
+    public static function getListingCacheKey(): string
+    {
+        return 'author_listing';
+    }
+
+    public static function getModelName(): string
+    {
+        return 'Author';
+    }
 
     /**
      * Store a newly created resource in storage.

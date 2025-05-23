@@ -4,9 +4,17 @@ namespace App\Http\Controllers\Api\V1;
 
 use Illuminate\Http\Request;
 
-class BookController extends BaseController
+class BookController extends AbstractController
 {
-    protected string $entity = 'Book';
+    public static function getListingCacheKey(): string
+    {
+        return 'book_listing';
+    }
+
+    public static function getModelName(): string
+    {
+        return 'Book';
+    }
 
     /**
      * Store a newly created resource in storage.
