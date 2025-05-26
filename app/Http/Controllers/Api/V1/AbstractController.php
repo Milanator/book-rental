@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Form\FormBuilder;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,7 +17,7 @@ abstract class AbstractController extends Controller
     protected const int CACHE_TTL = 3600; // 1 hour
 
     // form builder fields
-    abstract protected function formBuilderSchema(): array;
+    abstract protected function getFormSchema(?Model $model = null): array;
 
     // e.g. Author, Book
     abstract protected static function getModelName(): string;
@@ -82,10 +83,13 @@ abstract class AbstractController extends Controller
         }
     }
 
-    public function formBuilder()
+    public function formBuilder(?int $id = null)
     {
         try {
-            return (new FormBuilder($this->formBuilderSchema()))->toArray();
+            $model = $this->getModelNamespace()::find($id);
+            $schema = $this->getFormSchema(model: $model);
+
+            return (new FormBuilder(formSchema: $schema))->toArray();
         } catch (\Exception $exception) {
             $this->apiErrorHandler($exception);
         }

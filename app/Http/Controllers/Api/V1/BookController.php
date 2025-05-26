@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Form\Fields\TextField;
+use App\Form\Fields\Checkbox;
+use App\Form\Fields\Text;
 use App\Models\Book;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class BookController extends AbstractController
@@ -18,10 +20,15 @@ class BookController extends AbstractController
         return 'book_listing';
     }
 
-    protected function formBuilderSchema(): array
+    protected function getFormSchema(?Model $model = null): array
     {
         return [
-            (new TextField('title', __('Title')))->required()
+            'title' => !$model ? __('Create book') : __('Edit book', ['title' => $model->title]),
+            'submit_url' => !$model ? route('api.v1.book.store') : route('api.v1.book.update', ['book' => $model]),
+            'fields' => [
+                (new Text('title', __('Title')))->required()->placeholder(__('Book title')),
+                // (new Checkbox('is_borrowed', __('Is borrowed'))),
+            ]
         ];
     }
 

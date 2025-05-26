@@ -8,7 +8,7 @@ class BaseField implements FormFieldInterface
 {
     protected string $type;
 
-    protected bool $required;
+    protected bool $required = false;
 
     protected ?string $placeholder = null;
 

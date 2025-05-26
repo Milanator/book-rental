@@ -2,7 +2,7 @@
 
 namespace App\Form\Fields;
 
-class TextField extends BaseField
+class Text extends BaseField
 {
     protected string $type = 'Text';
 }

@@ -1,10 +1,15 @@
 <script setup>
 import FieldBuilder from "@/components/form/FieldBuilder.vue";
 
-const props = defineProps(["formBuilder"]);
+const props = defineProps({
+    formBuilder: {
+        type: Object,
+    },
+});
 </script>
 <template>
-    <h1>Page title</h1>
-    <h2>Page subtitle</h2>
+    <h1>{{ formBuilder.title }}</h1>
+    <h2 v-if="formBuilder.subtitle">{{ formBuilder.subtitle }}</h2>
     <FieldBuilder v-for="field in formBuilder.fields" :field="field" />
+    <button>Uložiť</button>
 </template>

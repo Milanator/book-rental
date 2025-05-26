@@ -5,7 +5,9 @@ use App\Http\Controllers\Api\V1\BookController;
 use Illuminate\Support\Facades\Route;
 
 // Book
-Route::apiResource('book', BookController::class)->only(['index']);
+Route::apiResource('book', BookController::class)->only(['index', 'store', 'update']);
+
+Route::get('/book/{id}/form-builder', [BookController::class, 'formBuilder'])->name('formBuilder');
 
 Route::get('/book/form-builder', [BookController::class, 'formBuilder'])->name('formBuilder');
 

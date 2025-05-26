@@ -1,14 +1,28 @@
 <script setup>
 import Layout from "@/layouts/Layout.vue";
 import { onMounted } from "vue";
+import { useGeneralStore } from "@/store/general";
 import { useBookStore } from "@/store/book";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
 
+const generalStore = useGeneralStore();
+
 const bookStore = useBookStore();
 
-onMounted(() => bookStore.fetchAll());
-</script>
+const model = "book";
 
+onMounted(() => generalStore.fetchAll(model));
+
+const borrowBook = (id) => {
+    bookStore.borrow(id).then(() => generalStore.fetchAll(model));
+};
+
+const changePage = (page) => {
+    generalStore.page = page;
+
+    generalStore.fetchAll(model);
+};
+</script>
 <template>
     <Layout>
         <h5 class="card-title py-4">Knihy</h5>
@@ -24,7 +38,7 @@ onMounted(() => bookStore.fetchAll());
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="book in bookStore.data.data">
+                <tr v-for="book in generalStore.data.data">
                     <th scope="row">{{ book.id }}</th>
                     <td>{{ book.title }}</td>
                     <td>{{ book.author }}</td>
@@ -37,15 +51,11 @@ onMounted(() => bookStore.fetchAll());
                         <a
                             v-if="book.is_borrowed"
                             class="px-2"
-                            @click="bookStore.borrow(book.id)"
+                            @click="borrowBook(book.id)"
                         >
                             Vrátiť
                         </a>
-                        <a
-                            v-else
-                            class="px-2"
-                            @click="bookStore.borrow(book.id)"
-                        >
+                        <a v-else class="px-2" @click="borrowBook(book.id)">
                             Požičať
                         </a>
                     </td>
@@ -54,8 +64,8 @@ onMounted(() => bookStore.fetchAll());
         </table>
 
         <bootstrap5-pagination
-            :data="bookStore.data"
-            @pagination-change-page="bookStore.fetchAll"
+            :data="generalStore.data"
+            @pagination-change-page="changePage"
         />
     </Layout>
 </template>
