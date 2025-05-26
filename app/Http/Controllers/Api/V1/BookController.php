@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\Book\SaveRequest;
 use App\Models\Author;
 use App\Models\Book;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
 use App\Form\Fields\{
     Checkbox,
@@ -40,18 +41,18 @@ class BookController extends AbstractController
         ];
     }
 
-    public function store(SaveRequest $request)
+    public function store(SaveRequest $request): JsonResponse
     {
         return parent::storeModel($request);
     }
 
-    public function update(SaveRequest $request, int $id)
+    public function update(SaveRequest $request, int $id): JsonResponse
     {
         return parent::updateModel($request, $id);
     }
 
     // toggle borrow book
-    public function borrow(Book $book)
+    public function borrow(Book $book): JsonResponse
     {
         try {
             $book->update(['is_borrowed' => !$book->getAttributes()['is_borrowed']]);

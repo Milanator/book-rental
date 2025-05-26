@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Form\Fields\Text;
 use App\Http\Requests\Author\SaveRequest;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 
 class AuthorController extends AbstractController
 {
@@ -33,12 +34,12 @@ class AuthorController extends AbstractController
         ];
     }
 
-    public function store(SaveRequest $request)
+    public function store(SaveRequest $request): JsonResponse
     {
         return parent::storeModel($request);
     }
 
-    public function update(SaveRequest $request, int $id)
+    public function update(SaveRequest $request, int $id): JsonResponse
     {
         return parent::updateModel($request, $id);
     }
