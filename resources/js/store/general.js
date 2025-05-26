@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "@/plugins/axios";
 import { STATUS_ERROR, STATUS_SUCCESS } from "@/constants";
+import { getFormData } from "@/helpers";
 
 export const useGeneralStore = defineStore("general", {
     state: () => ({
@@ -15,14 +16,6 @@ export const useGeneralStore = defineStore("general", {
     }),
 
     actions: {
-        getFormFieldValue(input) {
-            if (input.type === "checkbox") {
-                return input.checked;
-            }
-
-            return input.value;
-        },
-
         setFlashMessage(message, status) {
             this.flashMessage = {
                 status,
@@ -40,26 +33,6 @@ export const useGeneralStore = defineStore("general", {
 
         setId(id) {
             this.id = id;
-        },
-
-        // get all form data
-        getFormData(id) {
-            const formData = new FormData();
-
-            // laravel - PUT method
-            if (this.id) {
-                formData.append("_method", "PUT");
-            }
-
-            document
-                .getElementById(id)
-                .querySelectorAll(`select,input,textarea`)
-                .forEach((input) => {
-                    console.log(input.name, this.getFormFieldValue(input));
-                    formData.append(input.name, this.getFormFieldValue(input));
-                });
-
-            return formData;
         },
 
         getErrorMessages(errors) {
@@ -136,7 +109,7 @@ export const useGeneralStore = defineStore("general", {
                 const url = `/${this.model}`;
 
                 const params = Object.fromEntries(
-                    this.getFormData("filter").entries()
+                    getFormData("filter", this.id).entries()
                 );
 
                 const response = await axios({
@@ -159,7 +132,7 @@ export const useGeneralStore = defineStore("general", {
                 const url = !this.id
                     ? `/${this.model}`
                     : `/${this.model}/${this.id}`;
-                const data = this.getFormData("form-builder");
+                const data = getFormData("form-builder", this.id);
 
                 const response = await axios({
                     method: "POST",
