@@ -44,9 +44,15 @@ abstract class AbstractController extends Controller
         return "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\IndexResource";
     }
 
-    // check if first page
-    protected function isFirstPage(Request $request): bool
+    // check if first page or filter
+    protected function returnCachedData(Request $request): bool
     {
+        // filtering
+        if ($request->query->count()) {
+            return false;
+        }
+
+        // not first page
         return is_null($request->page) || $request->page === "1";
     }
 
@@ -78,7 +84,7 @@ abstract class AbstractController extends Controller
         try {
             $resource = $this->getIndexResourceNamespace();
 
-            if ($this->isFirstPage($request)) {
+            if ($this->returnCachedData($request)) {
                 // cached 1. page for fast load - on modification forget data in observer
                 $data = $this->getCachedListingData($request);
             } else {

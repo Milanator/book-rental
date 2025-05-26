@@ -61,7 +61,14 @@ class Book extends Model
         $query
             ->select('id', 'title', 'author_id', 'is_borrowed')
             ->with('author:id,name,surname')
-            ->when($request->title, fn(Builder $query) => $query->where('title', 'LIKE', "{$request->title}%"))
+            ->when(is_string($request->title), fn(Builder $query) => $query->where('title', 'LIKE', "{$request->title}%"))
+            ->when(is_numeric($request->is_borrowed), fn(Builder $query) => $query->whereIsBorrowed($request->is_borrowed))
+            ->when(is_string($request->author), callback:
+                fn(Builder $query) => $query->whereHas(
+                    'author',
+                    fn(Builder $q) =>
+                    $q->where('name', 'LIKE', "{$request->author}%")->orWhere('surname', 'LIKE', "{$request->author}%")
+                ))
             ->orderByDesc('id');
     }
 

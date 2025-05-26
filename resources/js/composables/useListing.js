@@ -1,4 +1,5 @@
 import { useGeneralStore } from "@/store/general";
+import { debounce, clearFields } from "@/helpers";
 
 export function useListing() {
     const generalStore = useGeneralStore();
@@ -15,8 +16,20 @@ export function useListing() {
         generalStore.fetchAll();
     };
 
+    const changeFilterField = debounce(() => {
+        generalStore.fetchFilter();
+    });
+
+    const resetFilter = () => {
+        clearFields("filter");
+
+        generalStore.fetchAll();
+    };
+
     return {
         deleteRow,
+        resetFilter,
         changePage,
+        changeFilterField,
     };
 }

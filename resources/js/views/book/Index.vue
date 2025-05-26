@@ -5,6 +5,7 @@ import { useGeneralStore } from "@/store/general";
 import { useBookStore } from "@/store/book";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
 import { useListing } from "@/composables/useListing";
+import Filter from "@/views/book/Filter.vue";
 
 const props = defineProps({
     model: {
@@ -30,7 +31,9 @@ const borrowBook = (id) => {
     <Layout>
         <h5 class="card-title">Knihy</h5>
 
-        <a href="/book/create">Vytvoriť knihu</a>
+          <Filter />
+          
+        <a href="/book/create" class="btn btn-primary my-3"> Vytvoriť knihu</a>
 
         <table class="table">
             <thead>
