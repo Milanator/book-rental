@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Form\FormBuilder;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,11 +15,14 @@ abstract class AbstractController extends Controller
 
     protected const int CACHE_TTL = 3600; // 1 hour
 
-    // listing cache key
-    abstract public static function getCacheKey(): string;
+    // form builder fields
+    abstract protected function formBuilderSchema(): array;
 
     // e.g. Author, Book
-    abstract public static function getModelName(): string;
+    abstract protected static function getModelName(): string;
+
+    // listing cache key
+    abstract public static function getCacheKey(): string;
 
     protected function getModelNamespace(): string
     {
@@ -73,6 +77,15 @@ abstract class AbstractController extends Controller
             $resource = "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\ShowResource";
 
             return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
+        } catch (\Exception $exception) {
+            $this->apiErrorHandler($exception);
+        }
+    }
+
+    public function formBuilder()
+    {
+        try {
+            return (new FormBuilder($this->formBuilderSchema()))->toArray();
         } catch (\Exception $exception) {
             $this->apiErrorHandler($exception);
         }

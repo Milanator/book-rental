@@ -10,7 +10,7 @@ class BaseField implements FormFieldInterface
 
     protected bool $required;
 
-    protected string $placeholder;
+    protected ?string $placeholder = null;
 
     public function __construct(
         protected string $name,

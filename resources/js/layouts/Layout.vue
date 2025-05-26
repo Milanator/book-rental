@@ -17,5 +17,7 @@
             </div>
         </div>
     </nav>
-    <slot />
+    <div class="container">
+        <slot />
+    </div>
 </template>

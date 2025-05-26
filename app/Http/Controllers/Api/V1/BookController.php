@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Form\Fields\TextField;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
 class BookController extends AbstractController
 {
+    protected static function getModelName(): string
+    {
+        return 'Book';
+    }
+
     public static function getCacheKey(): string
     {
         return 'book_listing';
     }
 
-    public static function getModelName(): string
+    protected function formBuilderSchema(): array
     {
-        return 'Book';
+        return [
+            (new TextField('title', __('Title')))->required()
+        ];
     }
 
     /**
@@ -48,7 +56,7 @@ class BookController extends AbstractController
 
             return response()->json(['status' => 1]);
         } catch (\Exception $exception) {
-            return $this->errorHandler($exception);
+            return $this->apiErrorHandler($exception);
         }
     }
 }
