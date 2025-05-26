@@ -9,5 +9,6 @@ Tento projekt je postavený na frameworku Laravel a obsahuje vlastný artisan pr
 ```bash
 git clone https://github.com/Milanator/book-rental.git
 cd book-rental
+cp .env.example .env
 composer install
 php artisan app:setup
