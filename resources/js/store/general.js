@@ -6,6 +6,7 @@ export const useGeneralStore = defineStore("general", {
     state: () => ({
         data: [],
         formBuilder: null,
+        listingBuilder: null,
         loaded: false,
         page: 1,
         id: undefined,
@@ -97,6 +98,18 @@ export const useGeneralStore = defineStore("general", {
                 const response = await axios.get(url);
 
                 this.formBuilder = response.data;
+            } catch (err) {
+                this.setFlashMessage(err, STATUS_ERROR);
+            }
+        },
+
+        async fetchListingBuilder() {
+            try {
+                const url = `/${this.model}/listing-builder`;
+
+                const response = await axios.get(url);
+
+                this.listingBuilder = response.data;
             } catch (err) {
                 this.setFlashMessage(err, STATUS_ERROR);
             }

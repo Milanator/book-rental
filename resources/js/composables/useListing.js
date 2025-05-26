@@ -26,10 +26,22 @@ export function useListing() {
         generalStore.fetchAll();
     };
 
+    // load form builder and model (if edit)
+    const setupListing = (props) => {
+        generalStore.setModel(props.model);
+
+        generalStore.fetchListingBuilder().then(async () => {
+            await generalStore.fetchAll();
+
+            generalStore.setLoaded(true);
+        });
+    };
+
     return {
         deleteRow,
         resetFilter,
         changePage,
+        setupListing,
         changeFilterField,
     };
 }

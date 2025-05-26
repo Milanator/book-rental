@@ -15,17 +15,13 @@ const props = defineProps({
 
 const generalStore = useGeneralStore();
 
-const { fetchFormData, submitForm } = useForm();
+const { setupForm, submitForm } = useForm();
 
-generalStore.setModel(props.model);
-
-generalStore.setId(props.id);
-
-// fetch form fields and model
-onMounted(fetchFormData);
+onMounted(() => setupForm(props));
 </script>
 <template>
     <form v-if="generalStore.loaded" id="form-builder" @submit="submitForm">
+        <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <template
@@ -47,17 +43,12 @@ onMounted(fetchFormData);
             </ol>
         </nav>
 
-        <!-- Title -->
-        <h1>{{ generalStore.formBuilder.title }}</h1>
-        <!-- Subtitle -->
-        <h2 v-if="generalStore.formBuilder.subtitle">
-            {{ generalStore.formBuilder.subtitle }}
-        </h2>
         <!-- Form fields -->
         <FieldBuilder
             v-for="field in generalStore.formBuilder.fields"
             :field="field"
         />
+        
         <button type="submit" class="btn btn-primary">Uložiť</button>
     </form>
 </template>

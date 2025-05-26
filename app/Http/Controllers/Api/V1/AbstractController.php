@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Form\FormBuilder;
 use App\Http\Controllers\Controller;
+use App\Table\TableBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,6 +24,8 @@ abstract class AbstractController extends Controller
 
     // form builder fields
     abstract protected function getFormSchema(?Model $model = null): array;
+
+    abstract protected function getListingSchema(): array;
 
     // e.g. Author, Book
     abstract protected static function getModelName(): string;
@@ -155,15 +158,28 @@ abstract class AbstractController extends Controller
         }
     }
 
-    public function formBuilder(?int $id = null)
+    // form field builder
+    public function formBuilder(?int $id = null): array|JsonResponse
     {
         try {
             $model = $this->getModelNamespace()::find($id);
             $schema = $this->getFormSchema(model: $model);
 
-            return (new FormBuilder(formSchema: $schema))->toArray();
+            return (new FormBuilder($schema))->toArray();
         } catch (\Exception $exception) {
-            $this->apiErrorHandler($exception);
+            return $this->apiErrorHandler($exception);
+        }
+    }
+
+    // listing column builder
+    public function listingBuilder(): array|JsonResponse
+    {
+        try {
+            $schema = $this->getListingSchema();
+
+            return (new TableBuilder($schema))->toArray();
+        } catch (\Exception $exception) {
+            return $this->apiErrorHandler($exception);
         }
     }
 }

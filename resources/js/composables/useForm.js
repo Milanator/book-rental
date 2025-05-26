@@ -9,7 +9,11 @@ export function useForm() {
     const getFieldValue = (path) => ref(get(generalStore.data, path));
 
     // load form builder and model (if edit)
-    const fetchFormData = () => {
+    const setupForm = (props) => {
+        generalStore.setModel(props.model);
+
+        generalStore.setId(props.id);
+
         generalStore.fetchFormBuilder().then(async () => {
             if (generalStore.id) {
                 // edit page
@@ -28,7 +32,7 @@ export function useForm() {
 
     return {
         getFieldValue,
-        fetchFormData,
+        setupForm,
         submitForm,
     };
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 // Book
 Route::get('/book/form-builder/{id}', [BookController::class, 'formBuilder']); // on edit
 Route::get('/book/form-builder', [BookController::class, 'formBuilder']); // on create
+Route::get('/book/listing-builder', [BookController::class, 'listingBuilder']);
 
 Route::get('/book/{book}/borrow', [BookController::class, 'borrow']);
 

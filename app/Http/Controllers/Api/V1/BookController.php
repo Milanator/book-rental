@@ -7,10 +7,11 @@ use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
+use App\Table\Columns\Text as TText;
 use App\Form\Fields\{
-    Checkbox,
-    Select,
-    Text,
+    Checkbox as FCheckbox,
+    Select as FSelect,
+    Text as FText,
 };
 
 class BookController extends AbstractController
@@ -34,10 +35,23 @@ class BookController extends AbstractController
                 ['label' => !$model ? __('Create book') : __('Edit book')]
             ],
             'fields' => [
-                (new Text('title', __('Title')))->required()->placeholder(__('Book title')),
-                (new Checkbox('is_borrowed', __('Is borrowed'))),
-                (new Select('author_id', __('Author')))->options(Author::getOptions()),
+                (new FText('title', __('Title')))->required()->placeholder(__('Book title')),
+                (new FCheckbox('is_borrowed', __('Is borrowed'))),
+                (new FSelect('author_id', __('Author')))->options(Author::getOptions()),
             ]
+        ];
+    }
+
+    protected function getListingSchema(): array
+    {
+        return [
+            'title' => __('Books'),
+            'columns' => [
+                new TText('id', __('Id')),
+                new TText('title', __('Title')),
+                new TText('author', __('Author')),
+                new TText('is_borrowed_text', __('Is borrowed')),
+            ],
         ];
     }
 
