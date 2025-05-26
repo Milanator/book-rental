@@ -7,18 +7,8 @@ use Illuminate\Support\Facades\Artisan;
 
 class AppSetup extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:setup';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Run all necessary commands to setup app';
 
     /**
@@ -26,6 +16,10 @@ class AppSetup extends Command
      */
     public function handle()
     {
+        Artisan::call('key:generate');
+
+        dump('Key generation ended.');
+
         exec('npm install');
 
         exec('npm run build');

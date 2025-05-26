@@ -14,7 +14,7 @@ class IndexResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return array_merge($this->only(['id', 'title', 'is_borrowed_text']), [
+        return array_merge($this->only(['id', 'title', 'is_borrowed_text', 'is_borrowed']), [
             'author' => $this->author->full_name,
         ]);
     }

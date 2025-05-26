@@ -14,11 +14,8 @@ cd book-rental
 # 2. Súbor s env. premennými
 cp .env.example .env
 
-# 3. Šifrovací kľúč
-php artisan key:generate
-
-# 4. Inštalácia composer balíčkov
+# 3. Inštalácia composer balíčkov
 composer install
 
-# 5. NPM, Migrácie, Seed databázy
+# 4. NPM, Migrácie, Seed databázy
 php artisan app:setup
