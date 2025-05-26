@@ -31,8 +31,8 @@ const borrowBook = (id) => {
     <Layout>
         <h5 class="card-title">Knihy</h5>
 
-          <Filter />
-          
+        <Filter />
+
         <a href="/book/create" class="btn btn-primary my-3"> Vytvoriť knihu</a>
 
         <table class="table">
