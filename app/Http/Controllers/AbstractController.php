@@ -24,7 +24,7 @@ abstract class AbstractController extends Controller
     public function edit(int $id)
     {
         try {
-            return $this->view($this->getModelName() . 'Edit', ['id' => $id]);
+            return $this->view($this->getModelName() . 'Edit', ['id' => $id, 'model' => strtolower($this->getModelName())]);
         } catch (\Exception $exception) {
             report($exception);
 

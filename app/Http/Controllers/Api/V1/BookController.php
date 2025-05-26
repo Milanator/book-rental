@@ -27,7 +27,7 @@ class BookController extends AbstractController
             'submit_url' => !$model ? route('api.v1.book.store') : route('api.v1.book.update', ['book' => $model]),
             'fields' => [
                 (new Text('title', __('Title')))->required()->placeholder(__('Book title')),
-                // (new Checkbox('is_borrowed', __('Is borrowed'))),
+                (new Checkbox('is_borrowed', __('Is borrowed'))),
             ]
         ];
     }
