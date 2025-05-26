@@ -7,7 +7,6 @@ export const useGeneralStore = defineStore("general", {
         data: [],
         formBuilder: null,
         loaded: false,
-        error: null,
         page: 1,
         id: undefined,
         model: undefined,
@@ -62,8 +61,6 @@ export const useGeneralStore = defineStore("general", {
         },
 
         async fetchAll() {
-            this.error = null;
-
             try {
                 const response = await axios.get(
                     `/${this.model}?page=${this.page}`
@@ -76,8 +73,6 @@ export const useGeneralStore = defineStore("general", {
         },
 
         async fetchSingle() {
-            this.error = null;
-
             try {
                 const response = await axios.get(`/${this.model}/${this.id}`);
 
@@ -88,8 +83,6 @@ export const useGeneralStore = defineStore("general", {
         },
 
         async fetchFormBuilder() {
-            this.error = null;
-
             try {
                 // create or edit page
                 const url = !this.id
@@ -104,9 +97,21 @@ export const useGeneralStore = defineStore("general", {
             }
         },
 
-        async submitForm() {
-            this.error = null;
+        async deleteSingle(id) {
+            try {
+                const url = `/${this.model}/${id}`;
 
+                const response = await axios.delete(url);
+
+                this.setFlashMessage(response.data.message, STATUS_SUCCESS);
+
+                return response;
+            } catch (err) {
+                this.setFlashMessage(err, STATUS_ERROR);
+            }
+        },
+
+        async submitForm() {
             try {
                 // create or edit page
                 const url = !this.id

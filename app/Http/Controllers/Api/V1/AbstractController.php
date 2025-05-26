@@ -68,7 +68,7 @@ abstract class AbstractController extends Controller
         return response()->json(['message' => $message, 'status' => self::STATUS_SUCCESS], 200);
     }
 
-    protected function getCacheListingData(Request $request): LengthAwarePaginator
+    protected function getCachedListingData(Request $request): LengthAwarePaginator
     {
         return Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
     }
@@ -80,7 +80,7 @@ abstract class AbstractController extends Controller
 
             if ($this->isFirstPage($request)) {
                 // cached 1. page for fast load - on modification forget data in observer
-                $data = $this->getCacheListingData($request);
+                $data = $this->getCachedListingData($request);
             } else {
                 $data = $this->getListingData($request);
             }
@@ -102,31 +102,37 @@ abstract class AbstractController extends Controller
         }
     }
 
-    public function storeModel(Request $request, string $message): JsonResponse
+    public function storeModel(Request $request): JsonResponse
     {
         try {
             $this->getModelNamespace()::store($request);
 
-            return $this->apiSuccessHandler($message);
+            return $this->apiSuccessHandler(__("success_stored_" . strtolower($this->getModelName())));
         } catch (\Exception $exception) {
             return $this->apiErrorHandler($exception);
         }
     }
 
-    public function updateModel(Request $request, string $message, int $id)
+    public function updateModel(Request $request, int $id)
     {
         try {
             $this->getModelNamespace()::modify($request, $id);
 
-            return $this->apiSuccessHandler($message);
+            return $this->apiSuccessHandler(__("success_updated_" . strtolower($this->getModelName())));
         } catch (\Exception $exception) {
             return $this->apiErrorHandler($exception);
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        try {
+            $this->getModelNamespace()::whereId($id)->first()->delete();
+
+            return $this->apiSuccessHandler(__("success_deleted_" . strtolower($this->getModelName())));
+        } catch (\Exception $exception) {
+            return $this->apiErrorHandler($exception);
+        }
     }
 
     public function formBuilder(?int $id = null)

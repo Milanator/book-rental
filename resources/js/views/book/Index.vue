@@ -4,6 +4,7 @@ import { onMounted } from "vue";
 import { useGeneralStore } from "@/store/general";
 import { useBookStore } from "@/store/book";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
+import { useListing } from "@/composables/useListing";
 
 const props = defineProps({
     model: {
@@ -15,18 +16,14 @@ const generalStore = useGeneralStore();
 
 const bookStore = useBookStore();
 
-generalStore.setModel(props.model)
+const { deleteRow, changePage } = useListing();
+
+generalStore.setModel(props.model);
 
 onMounted(() => generalStore.fetchAll());
 
 const borrowBook = (id) => {
     bookStore.borrow(id).then(() => generalStore.fetchAll());
-};
-
-const changePage = (page) => {
-    generalStore.page = page;
-
-    generalStore.fetchAll();
 };
 </script>
 <template>
@@ -55,7 +52,9 @@ const changePage = (page) => {
                         <a :href="`/book/${book.id}/edit`" class="px-2">
                             Upraviť
                         </a>
-                        <a href="#" class="px-2"> Odstrániť </a>
+                        <a class="px-2" @click="deleteRow(book.id)">
+                            Odstrániť
+                        </a>
                         <a
                             v-if="book.is_borrowed"
                             class="px-2"
