@@ -31,7 +31,7 @@ const changePage = (page) => {
 </script>
 <template>
     <Layout>
-        <h5 class="card-title py-4">Knihy</h5>
+        <h5 class="card-title">Knihy</h5>
 
         <a href="/book/create">Vytvoriť knihu</a>
 

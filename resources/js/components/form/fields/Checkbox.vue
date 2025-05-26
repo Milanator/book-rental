@@ -2,7 +2,7 @@
 const props = defineProps(["field"]);
 </script>
 <template>
-    <div class="form-check">
+    <div class="form-check mb-3">
         <!-- Field -->
         <input
             class="form-check-input"

@@ -22,7 +22,7 @@ const generalStore = useGeneralStore();
             </div>
         </div>
     </nav>
-    <div class="container">
+    <div class="container py-4">
         <div
             v-if="generalStore.flashMessage"
             :class="`alert alert-${generalStore.flashMessage.status}`"

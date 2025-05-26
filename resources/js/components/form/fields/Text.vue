@@ -2,7 +2,7 @@
 const props = defineProps(["field"]);
 </script>
 <template>
-    <div class="form-group">
+    <div class="form-group mb-3">
         <!-- Label -->
         <label :for="field.name">{{ field.label }}</label>
         <!-- Field -->

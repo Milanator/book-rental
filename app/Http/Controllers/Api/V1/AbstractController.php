@@ -34,6 +34,16 @@ abstract class AbstractController extends Controller
         return "\App\\Models\\{$this->getModelName()}";
     }
 
+    protected function getShowResourceNamespace(): string
+    {
+        return "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\ShowResource";
+    }
+
+    protected function getIndexResourceNamespace(): string
+    {
+        return "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\IndexResource";
+    }
+
     // check if first page
     protected function isFirstPage(Request $request): bool
     {
@@ -58,15 +68,15 @@ abstract class AbstractController extends Controller
         return response()->json(['message' => $message, 'status' => self::STATUS_SUCCESS], 200);
     }
 
-    protected function getCacheListingData(Request $request)
+    protected function getCacheListingData(Request $request): LengthAwarePaginator
     {
         return Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
     }
 
-    public function index(Request $request)
+    public function index(Request $request): object
     {
         try {
-            $resource = "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\IndexResource";
+            $resource = $this->getIndexResourceNamespace();
 
             if ($this->isFirstPage($request)) {
                 // cached 1. page for fast load - on modification forget data in observer
@@ -81,10 +91,10 @@ abstract class AbstractController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(string $id): object
     {
         try {
-            $resource = "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\ShowResource";
+            $resource = $this->getShowResourceNamespace();
 
             return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
         } catch (\Exception $exception) {
@@ -92,7 +102,7 @@ abstract class AbstractController extends Controller
         }
     }
 
-    public function storeModel(Request $request, string $message)
+    public function storeModel(Request $request, string $message): JsonResponse
     {
         try {
             $this->getModelNamespace()::store($request);
@@ -103,9 +113,6 @@ abstract class AbstractController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
