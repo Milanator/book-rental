@@ -11,8 +11,8 @@ const { changeFilterField } = useListing();
             <input
                 class="form-control"
                 type="text"
-                name="title"
-                placeholder="Názov"
+                name="name"
+                placeholder="Meno"
                 @input="changeFilterField"
             />
         </div>
@@ -21,22 +21,10 @@ const { changeFilterField } = useListing();
             <input
                 class="form-control"
                 type="text"
-                name="author"
-                placeholder="Autor"
+                name="surname"
+                placeholder="Priezvisko"
                 @input="changeFilterField"
             />
-        </div>
-        <div class="col-sm">
-            <!-- Borrowed -->
-            <select
-                class="form-control"
-                name="is_borrowed"
-                @change="changeFilterField"
-            >
-                <option value="">Všetky</option>
-                <option value="1">Požičané</option>
-                <option value="0">Nepožičané</option>
-            </select>
         </div>
         <ResetFilter />
     </div>

@@ -6,6 +6,7 @@ use App\Form\Fields\Text;
 use App\Http\Requests\Author\SaveRequest;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use App\Table\Columns\Text as TText;
 
 class AuthorController extends AbstractController
 {
@@ -31,6 +32,18 @@ class AuthorController extends AbstractController
                 (new Text('name', __('Firstname')))->required(),
                 (new Text('surname', __('Surname')))->required(),
             ]
+        ];
+    }
+
+    protected function getListingSchema(): array
+    {
+        return [
+            'title' => __('Author'),
+            'columns' => [
+                new TText('id', __('Id')),
+                new TText('full_name', __('Name')),
+                new TText('books_count', __('Book count')),
+            ],
         ];
     }
 

@@ -16,5 +16,6 @@ Route::apiResource('book', BookController::class)->only(['index', 'store', 'upda
 // Author
 Route::get('/author/form-builder/{id}', [AuthorController::class, 'formBuilder']); // on edit
 Route::get('/author/form-builder', [AuthorController::class, 'formBuilder']); // on create
+Route::get('/author/listing-builder', [AuthorController::class, 'listingBuilder']);
 
 Route::apiResource('author', AuthorController::class)->only(['index', 'show', 'store', 'update', 'destroy']);

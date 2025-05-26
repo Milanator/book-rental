@@ -70,8 +70,8 @@ class Author extends Model
         $query
             ->select('id', 'name', 'surname')
             ->withCount('books')
-            ->when($request->name, fn(Builder $query) => $query->where('name', 'LIKE', "{$request->name}%"))
-            ->when($request->surname, fn(Builder $query) => $query->where('surname', 'LIKE', "{$request->surname}%"))
+            ->when(is_string($request->name), fn(Builder $query) => $query->where('name', 'LIKE', "{$request->name}%"))
+            ->when(is_string($request->surname), fn(Builder $query) => $query->where('surname', 'LIKE', "{$request->surname}%"))
             ->orderByDesc('id');
     }
 
