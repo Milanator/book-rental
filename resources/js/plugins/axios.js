@@ -9,4 +9,6 @@ const axiosConfig = {
     },
 };
 
-export default axios.create(axiosConfig);
+const instance = axios.create(axiosConfig);
+
+export default instance;

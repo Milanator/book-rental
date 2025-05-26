@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Cache;
 
 abstract class AbstractController extends Controller
 {
+    protected const string STATUS_ERROR = 'danger';
+
+    protected const string STATUS_SUCCESS = 'success';
+
     protected const int DEFAULT_LIMIT = 10;
 
     protected const int CACHE_TTL = 3600; // 1 hour
@@ -46,12 +50,12 @@ abstract class AbstractController extends Controller
     {
         report($exception);
 
-        return response()->json(['message' => $exception->getMessage(), 'success' => 0], 500);
+        return response()->json(['message' => $exception->getMessage(), 'status' => self::STATUS_ERROR], 500);
     }
 
     protected function apiSuccessHandler(string $message): JsonResponse
     {
-        return response()->json(['message' => $message, 'success' => 1], 200);
+        return response()->json(['message' => $message, 'status' => self::STATUS_SUCCESS], 200);
     }
 
     protected function getCacheListingData(Request $request)

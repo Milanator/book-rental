@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Form\Fields\Checkbox;
-use App\Form\Fields\Select;
-use App\Form\Fields\Text;
 use App\Http\Requests\Book\SaveRequest;
 use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Database\Eloquent\Model;
+use App\Form\Fields\{
+    Checkbox,
+    Select,
+    Text,
+};
 
 class BookController extends AbstractController
 {
@@ -42,9 +44,6 @@ class BookController extends AbstractController
         return parent::storeModel($request, __('success_stored_book'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
@@ -53,9 +52,9 @@ class BookController extends AbstractController
     public function borrow(Book $book)
     {
         try {
-            $book->update(['is_borrowed' => !$book->is_borrowed]);
+            $book->update(['is_borrowed' => !$book->getAttributes()['is_borrowed']]);
 
-            return response()->json(['status' => 1]);
+            return $this->apiSuccessHandler('success_borrow_book');
         } catch (\Exception $exception) {
             return $this->apiErrorHandler($exception);
         }

@@ -1,3 +1,8 @@
+<script setup>
+import { useGeneralStore } from "@/store/general";
+
+const generalStore = useGeneralStore();
+</script>
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -18,6 +23,14 @@
         </div>
     </nav>
     <div class="container">
+        <div
+            v-if="generalStore.flashMessage"
+            :class="`alert alert-${generalStore.flashMessage.status}`"
+            role="alert"
+        >
+            {{ generalStore.flashMessage.message }}
+        </div>
+
         <slot />
     </div>
 </template>

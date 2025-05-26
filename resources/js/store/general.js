@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "@/plugins/axios";
+import { STATUS_ERROR, STATUS_SUCCESS } from "@/constants";
 
 export const useGeneralStore = defineStore("general", {
     state: () => ({
@@ -9,6 +10,7 @@ export const useGeneralStore = defineStore("general", {
         page: 1,
         id: undefined,
         model: undefined,
+        flashMessage: undefined,
     }),
 
     actions: {
@@ -18,6 +20,13 @@ export const useGeneralStore = defineStore("general", {
             }
 
             return input.value;
+        },
+
+        setSuccessMessage(message, status) {
+            this.flashMessage = {
+                status,
+                message,
+            };
         },
 
         // get all form data
@@ -49,8 +58,10 @@ export const useGeneralStore = defineStore("general", {
 
                 this.data = response.data;
             } catch (err) {
-                this.error = "Nepodarilo sa načítať dáta.";
-                console.error(err);
+                this.setSuccessMessage(
+                    "Nepodarilo sa načítať dáta.",
+                    STATUS_ERROR
+                );
             }
         },
 
@@ -67,8 +78,10 @@ export const useGeneralStore = defineStore("general", {
 
                 this.formBuilder = response.data;
             } catch (err) {
-                this.error = "Nepodarilo sa načítať dáta.";
-                console.error(err);
+                this.setSuccessMessage(
+                    "Nepodarilo sa načítať dáta.",
+                    STATUS_ERROR
+                );
             }
         },
 
@@ -88,9 +101,13 @@ export const useGeneralStore = defineStore("general", {
                 });
 
                 this.data = response.data;
+
+                this.setSuccessMessage(response.data.message, STATUS_SUCCESS);
             } catch (err) {
-                this.error = "Nepodarilo sa načítať dáta.";
-                console.error(err);
+                this.setSuccessMessage(
+                    "Nepodarilo sa načítať dáta.",
+                    STATUS_ERROR
+                );
             }
         },
     },
