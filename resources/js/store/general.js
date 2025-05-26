@@ -66,7 +66,7 @@ export const useGeneralStore = defineStore("general", {
                 // create or edit page
                 const url = !this.id
                     ? `/${this.model}/form-builder`
-                    : `/${this.model}/form-builder/${this.id}`;
+                    : `/${this.model}/form-builder?id=${this.id}`;
 
                 const response = await axios.get(url);
 

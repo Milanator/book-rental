@@ -159,10 +159,10 @@ abstract class AbstractController extends Controller
     }
 
     // form field builder
-    public function formBuilder(?int $id = null): array|JsonResponse
+    public function formBuilder(Request $request): array|JsonResponse
     {
         try {
-            $model = $this->getModelNamespace()::find($id);
+            $model = $this->getModelNamespace()::find($request->id);
             $schema = $this->getFormSchema(model: $model);
 
             return (new FormBuilder($schema))->toArray();
