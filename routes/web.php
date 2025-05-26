@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('author', AuthorController::class)->only(['index', 'show']);
 
-Route::resource('book', BookController::class)->only(['index', 'show', 'edit']);
+Route::resource('book', BookController::class)->only(['index', 'show', 'edit', 'create']);
 

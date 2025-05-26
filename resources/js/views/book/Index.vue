@@ -5,27 +5,35 @@ import { useGeneralStore } from "@/store/general";
 import { useBookStore } from "@/store/book";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
 
+const props = defineProps({
+    model: {
+        type: String,
+    },
+});
+
 const generalStore = useGeneralStore();
 
 const bookStore = useBookStore();
 
-const model = "book";
+generalStore.model = props.model;
 
-onMounted(() => generalStore.fetchAll(model));
+onMounted(() => generalStore.fetchAll());
 
 const borrowBook = (id) => {
-    bookStore.borrow(id).then(() => generalStore.fetchAll(model));
+    bookStore.borrow(id).then(() => generalStore.fetchAll());
 };
 
 const changePage = (page) => {
     generalStore.page = page;
 
-    generalStore.fetchAll(model);
+    generalStore.fetchAll();
 };
 </script>
 <template>
     <Layout>
         <h5 class="card-title py-4">Knihy</h5>
+
+        <a href="/book/create">Vytvoriť knihu</a>
 
         <table class="table">
             <thead>

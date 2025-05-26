@@ -14,6 +14,7 @@ class FormBuilder implements FormFieldInterface
     {
         return [
             'title' => $this->formSchema['title'],
+            'submit_url' => $this->formSchema['submit_url'],
             'subtitle' => $this->formSchema['subtitle'] ?? null,
             'fields' => array_map(fn($field) => $field->toArray(), $this->formSchema['fields']),
         ];

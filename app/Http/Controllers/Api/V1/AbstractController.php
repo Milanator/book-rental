@@ -46,7 +46,12 @@ abstract class AbstractController extends Controller
     {
         report($exception);
 
-        return response()->json(['message' => $exception->getMessage(), 'status' => 0], 500);
+        return response()->json(['message' => $exception->getMessage(), 'success' => 0], 500);
+    }
+
+    protected function apiSuccessHandler(string $message): JsonResponse
+    {
+        return response()->json(['message' => $message, 'success' => 1], 200);
     }
 
     protected function getCacheListingData(Request $request)
@@ -68,7 +73,7 @@ abstract class AbstractController extends Controller
 
             return $resource::collection(resource: $data);
         } catch (\Exception $exception) {
-            $this->apiErrorHandler($exception);
+            return $this->apiErrorHandler($exception);
         }
     }
 
@@ -79,8 +84,27 @@ abstract class AbstractController extends Controller
 
             return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
         } catch (\Exception $exception) {
-            $this->apiErrorHandler($exception);
+            return $this->apiErrorHandler($exception);
         }
+    }
+
+    public function storeModel(Request $request, string $message)
+    {
+        try {
+            $this->getModelNamespace()::store($request);
+
+            return $this->apiSuccessHandler($message);
+        } catch (\Exception $exception) {
+            return $this->apiErrorHandler($exception);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
     }
 
     public function formBuilder(?int $id = null)

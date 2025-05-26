@@ -13,7 +13,7 @@ abstract class AbstractController extends Controller
     public function index(Request $request)
     {
         try {
-            return $this->view($this->getModelName() . 'Index');
+            return $this->view($this->getModelName() . 'Index', ['model' => strtolower($this->getModelName())]);
         } catch (\Exception $exception) {
             report($exception);
 
@@ -24,7 +24,18 @@ abstract class AbstractController extends Controller
     public function edit(int $id)
     {
         try {
-            return $this->view($this->getModelName() . 'Edit', ['id' => $id, 'model' => strtolower($this->getModelName())]);
+            return $this->view("{$this->getModelName()}Edit", ['id' => $id, 'model' => strtolower($this->getModelName())]);
+        } catch (\Exception $exception) {
+            report($exception);
+
+            abort(500);
+        }
+    }
+
+    public function create()
+    {
+        try {
+            return $this->view("{$this->getModelName()}Edit", ['model' => strtolower($this->getModelName())]);
         } catch (\Exception $exception) {
             report($exception);
 

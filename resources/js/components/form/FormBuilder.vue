@@ -14,11 +14,25 @@ const props = defineProps({
 
 const generalStore = useGeneralStore();
 
+generalStore.id = props.id;
+
+generalStore.model = props.model;
+
 // fetch form fields
-onMounted(() => generalStore.fetchFormBuilder(props.model, props.id));
+onMounted(() => generalStore.fetchFormBuilder());
+
+const submitForm = (event) => {
+    event.preventDefault();
+
+    generalStore.submitForm();
+};
 </script>
 <template>
-    <template v-if="generalStore.formBuilder">
+    <form
+        v-if="generalStore.formBuilder"
+        id="form-builder"
+        @submit="submitForm"
+    >
         <!-- Title -->
         <h1>{{ generalStore.formBuilder.title }}</h1>
         <!-- Subtitle -->
@@ -31,5 +45,5 @@ onMounted(() => generalStore.fetchFormBuilder(props.model, props.id));
             :field="field"
         />
         <button>Uložiť</button>
-    </template>
+    </form>
 </template>

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Form\Fields\Checkbox;
 use App\Form\Fields\Text;
+use App\Http\Requests\Book\SaveRequest;
 use App\Models\Book;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class BookController extends AbstractController
 {
@@ -32,20 +32,9 @@ class BookController extends AbstractController
         ];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(SaveRequest $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return parent::storeModel($request, __('success_stored_book'));
     }
 
     /**

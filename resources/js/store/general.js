@@ -5,37 +5,63 @@ export const useGeneralStore = defineStore("general", {
     state: () => ({
         data: [],
         formBuilder: null,
-        loading: false,
         error: null,
         page: 1,
+        id: undefined,
+        model: undefined,
     }),
 
     actions: {
-        async fetchAll(model) {
-            this.loading = true;
+        getFormFieldValue(input) {
+            if (input.type === "checkbox") {
+                return input.checked;
+            }
+
+            return input.value;
+        },
+
+        // get all form data
+        getFormData(id) {
+            const formData = new FormData();
+
+            // laravel - PUT method
+            if (id) {
+                formData.append("_method", "PUT");
+            }
+
+            document
+                .getElementById("form-builder")
+                .querySelectorAll(`select,input,textarea`)
+                .forEach((input) => {
+                    formData.append(input.name, this.getFormFieldValue(input));
+                });
+
+            return formData;
+        },
+
+        async fetchAll() {
             this.error = null;
 
             try {
-                const response = await axios.get(`/${model}?page=${this.page}`);
+                const response = await axios.get(
+                    `/${this.model}?page=${this.page}`
+                );
 
                 this.data = response.data;
             } catch (err) {
                 this.error = "Nepodarilo sa načítať dáta.";
                 console.error(err);
-            } finally {
-                this.loading = false;
             }
         },
 
-        async fetchFormBuilder(model, id = null) {
-            this.loading = true;
+        async fetchFormBuilder() {
             this.error = null;
 
             try {
                 // create or edit page
-                const url = !id
-                    ? `/${model}/form-builder`
-                    : `/${model}/${id}/form-builder`;
+                const url = !this.id
+                    ? `/${this.model}/form-builder`
+                    : `/${this.model}/${this.id}/form-builder`;
 
                 const response = await axios.get(url);
 
@@ -43,8 +69,28 @@ export const useGeneralStore = defineStore("general", {
             } catch (err) {
                 this.error = "Nepodarilo sa načítať dáta.";
                 console.error(err);
-            } finally {
-                this.loading = false;
+            }
+        },
+
+        async submitForm(id = null) {
+            this.error = null;
+
+            try {
+                // create or edit page
+                const url = !id ? `/${this.model}` : `/${this.model}/${id}`;
+                const method = !id ? "POST" : "PUT";
+                const data = this.getFormData(id);
+
+                const response = await axios({
+                    method,
+                    url,
+                    data,
+                });
+
+                this.data = response.data;
+            } catch (err) {
+                this.error = "Nepodarilo sa načítať dáta.";
+                console.error(err);
             }
         },
     },
