@@ -26,15 +26,13 @@ class BookController extends AbstractController
 
     protected function getFormSchema(?Model $model = null): array
     {
-        $authors = Author::select('id', 'name', 'surname')->get()->pluck('full_name', 'id');
-
         return [
             'title' => !$model ? __('Create book') : __('Edit book', ['title' => $model->title]),
             'submit_url' => !$model ? route('api.v1.book.store') : route('api.v1.book.update', ['book' => $model]),
             'fields' => [
                 (new Text('title', __('Title')))->required()->placeholder(__('Book title')),
                 (new Checkbox('is_borrowed', __('Is borrowed'))),
-                (new Select('author_id', __('Author')))->options($authors->toArray()),
+                (new Select('author_id', __('Author')))->options(Author::getOptions()),
             ]
         ];
     }
@@ -44,9 +42,9 @@ class BookController extends AbstractController
         return parent::storeModel($request, __('success_stored_book'));
     }
 
-    public function destroy(string $id)
+    public function update(SaveRequest $request, int $id)
     {
-        //
+        return parent::updateModel($request, __('success_updated_book'), $id);
     }
 
     public function borrow(Book $book)

@@ -42,6 +42,14 @@ class Author extends Model
     }
 
     /**
+     * Static
+     */
+    public static function getOptions(): array
+    {
+        return Author::select('id', 'name', 'surname')->get()->pluck('full_name', 'id')->toArray();
+    }
+
+    /**
      * Scopes
      */
     #[Scope]

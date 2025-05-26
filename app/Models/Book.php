@@ -46,6 +46,12 @@ class Book extends Model
         return Book::create($request->rData());
     }
 
+    // update model - named because of method name collision
+    public static function modify(SaveRequest $request, int $id): void
+    {
+        Book::whereId($id)->first()->update($request->rData());
+    }
+
     /**
      * Scopes
      */

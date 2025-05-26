@@ -15,7 +15,7 @@ const generalStore = useGeneralStore();
 
 const bookStore = useBookStore();
 
-generalStore.model = props.model;
+generalStore.setModel(props.model)
 
 onMounted(() => generalStore.fetchAll());
 

@@ -96,7 +96,7 @@ abstract class AbstractController extends Controller
         try {
             $resource = $this->getShowResourceNamespace();
 
-            return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
+            return new $resource($this->getModelNamespace()::detail()->find($id));
         } catch (\Exception $exception) {
             return $this->apiErrorHandler($exception);
         }
@@ -113,7 +113,18 @@ abstract class AbstractController extends Controller
         }
     }
 
-    public function update(Request $request, string $id)
+    public function updateModel(Request $request, string $message, int $id)
+    {
+        try {
+            $this->getModelNamespace()::modify($request, $id);
+
+            return $this->apiSuccessHandler($message);
+        } catch (\Exception $exception) {
+            return $this->apiErrorHandler($exception);
+        }
+    }
+
+    public function destroy(string $id)
     {
         //
     }

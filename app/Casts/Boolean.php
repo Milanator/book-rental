@@ -8,7 +8,7 @@ class Boolean implements CastsAttributes
 {
     public function get($model, string $key, $value, array $attributes)
     {
-        return !empty($value) ? __('Yes') : __('No');
+        return !empty($value);
     }
 
     public function set($model, string $key, $value, array $attributes)

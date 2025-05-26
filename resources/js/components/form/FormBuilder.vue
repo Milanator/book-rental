@@ -14,12 +14,21 @@ const props = defineProps({
 
 const generalStore = useGeneralStore();
 
-generalStore.id = props.id;
+generalStore.setModel(props.model)
 
-generalStore.model = props.model;
+generalStore.setId(props.id)
 
-// fetch form fields
-onMounted(() => generalStore.fetchFormBuilder());
+// fetch form fields and model
+onMounted(() => {
+    generalStore.fetchFormBuilder().then(async () => {
+        if (generalStore.id) {
+            // edit page
+           await generalStore.fetchSingle();
+        }
+
+        generalStore.setLoaded(true)
+    });
+});
 
 const submitForm = (event) => {
     event.preventDefault();
@@ -29,7 +38,7 @@ const submitForm = (event) => {
 </script>
 <template>
     <form
-        v-if="generalStore.formBuilder"
+        v-if="generalStore.loaded"
         id="form-builder"
         @submit="submitForm"
     >

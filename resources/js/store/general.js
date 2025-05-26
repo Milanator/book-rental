@@ -6,6 +6,7 @@ export const useGeneralStore = defineStore("general", {
     state: () => ({
         data: [],
         formBuilder: null,
+        loaded: false,
         error: null,
         page: 1,
         id: undefined,
@@ -22,19 +23,31 @@ export const useGeneralStore = defineStore("general", {
             return input.value;
         },
 
-        setSuccessMessage(message, status) {
+        setFlashMessage(message, status) {
             this.flashMessage = {
                 status,
                 message,
             };
         },
 
+        setLoaded(loaded) {
+            this.loaded = loaded;
+        },
+
+        setModel(model) {
+            this.model = model;
+        },
+
+        setId(id) {
+            this.id = id;
+        },
+
         // get all form data
-        getFormData(id) {
+        getFormData() {
             const formData = new FormData();
 
             // laravel - PUT method
-            if (id) {
+            if (this.id) {
                 formData.append("_method", "PUT");
             }
 
@@ -58,10 +71,19 @@ export const useGeneralStore = defineStore("general", {
 
                 this.data = response.data;
             } catch (err) {
-                this.setSuccessMessage(
-                    "Nepodarilo sa načítať dáta.",
-                    STATUS_ERROR
-                );
+                this.setFlashMessage(err, STATUS_ERROR);
+            }
+        },
+
+        async fetchSingle() {
+            this.error = null;
+
+            try {
+                const response = await axios.get(`/${this.model}/${this.id}`);
+
+                this.data = response.data.data;
+            } catch (err) {
+                this.setFlashMessage(err, STATUS_ERROR);
             }
         },
 
@@ -78,36 +100,31 @@ export const useGeneralStore = defineStore("general", {
 
                 this.formBuilder = response.data;
             } catch (err) {
-                this.setSuccessMessage(
-                    "Nepodarilo sa načítať dáta.",
-                    STATUS_ERROR
-                );
+                this.setFlashMessage(err, STATUS_ERROR);
             }
         },
 
-        async submitForm(id = null) {
+        async submitForm() {
             this.error = null;
 
             try {
                 // create or edit page
-                const url = !id ? `/${this.model}` : `/${this.model}/${id}`;
-                const method = !id ? "POST" : "PUT";
-                const data = this.getFormData(id);
+                const url = !this.id
+                    ? `/${this.model}`
+                    : `/${this.model}/${this.id}`;
+                const data = this.getFormData();
 
                 const response = await axios({
-                    method,
+                    method: "POST",
                     url,
                     data,
                 });
 
                 this.data = response.data;
 
-                this.setSuccessMessage(response.data.message, STATUS_SUCCESS);
+                this.setFlashMessage(response.data.message, STATUS_SUCCESS);
             } catch (err) {
-                this.setSuccessMessage(
-                    "Nepodarilo sa načítať dáta.",
-                    STATUS_ERROR
-                );
+                this.setFlashMessage(err, STATUS_ERROR);
             }
         },
     },
