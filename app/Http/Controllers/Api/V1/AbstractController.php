@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
 abstract class AbstractController extends Controller
@@ -44,20 +45,30 @@ abstract class AbstractController extends Controller
         return "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\IndexResource";
     }
 
+    protected function isFiltering(Request $request): bool
+    {
+        return count(Arr::except($request->query(), ['limit', 'perPage', 'page'])) > 0;
+    }
+
+    protected function isFirstPage(Request $request): bool
+    {
+        return is_null($request->page) || $request->page === "1";
+    }
+
     // check if first page or filter
     protected function returnCachedData(Request $request): bool
     {
         // filtering
-        if ($request->query->count()) {
+        if ($this->isFiltering($request)) {
             return false;
         }
 
-        // not first page
-        return is_null($request->page) || $request->page === "1";
+        // is first page
+        return $this->isFirstPage($request);
     }
 
     // fetch paginated listing data by model
-    protected function getListingData(Request $request): LengthAwarePaginator
+    protected function fetchListingData(Request $request): LengthAwarePaginator
     {
         return $this->getModelNamespace()::listing($request)->paginate($request->limit ?? self::DEFAULT_LIMIT);
     }
@@ -76,7 +87,17 @@ abstract class AbstractController extends Controller
 
     protected function getCachedListingData(Request $request): LengthAwarePaginator
     {
-        return Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
+        return Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->fetchListingData($request));
+    }
+
+    protected function getListingData(Request $request): LengthAwarePaginator
+    {
+        if ($this->returnCachedData($request)) {
+            // cached 1. page for fast load - on modification forget data in observer
+            return $this->getCachedListingData($request);
+        }
+
+        return $this->fetchListingData($request);
     }
 
     public function index(Request $request): object
@@ -84,14 +105,7 @@ abstract class AbstractController extends Controller
         try {
             $resource = $this->getIndexResourceNamespace();
 
-            if ($this->returnCachedData($request)) {
-                // cached 1. page for fast load - on modification forget data in observer
-                $data = $this->getCachedListingData($request);
-            } else {
-                $data = $this->getListingData($request);
-            }
-
-            return $resource::collection(resource: $data);
+            return $resource::collection(resource: $this->getListingData($request));
         } catch (\Exception $exception) {
             return $this->apiErrorHandler($exception);
         }
