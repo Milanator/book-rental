@@ -17,6 +17,7 @@ abstract class AbstractController extends Controller
     // listing cache key
     abstract public static function getCacheKey(): string;
 
+    // e.g. Author, Book
     abstract public static function getModelName(): string;
 
     protected function getModelNamespace(): string
@@ -24,21 +25,28 @@ abstract class AbstractController extends Controller
         return "\App\\Models\\{$this->getModelName()}";
     }
 
+    // check if first page
     protected function isFirstPage(Request $request): bool
     {
         return is_null($request->page) || $request->page === "1";
     }
 
+    // fetch paginated listing data by model
     protected function getListingData(Request $request): LengthAwarePaginator
     {
         return $this->getModelNamespace()::listing($request)->paginate($request->limit ?? self::DEFAULT_LIMIT);
     }
 
-    protected function errorHandler(\Exception $exception): JsonResponse
+    protected function apiErrorHandler(\Exception $exception): JsonResponse
     {
         report($exception);
 
         return response()->json(['message' => $exception->getMessage(), 'status' => 0], 500);
+    }
+
+    protected function getCacheListingData(Request $request)
+    {
+        return Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
     }
 
     public function index(Request $request)
@@ -48,14 +56,14 @@ abstract class AbstractController extends Controller
 
             if ($this->isFirstPage($request)) {
                 // cached 1. page for fast load - on modification forget data in observer
-                $data = Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
+                $data = $this->getCacheListingData($request);
             } else {
                 $data = $this->getListingData($request);
             }
 
             return $resource::collection(resource: $data);
         } catch (\Exception $exception) {
-            $this->errorHandler($exception);
+            $this->apiErrorHandler($exception);
         }
     }
 
@@ -66,7 +74,7 @@ abstract class AbstractController extends Controller
 
             return new $resource($this->getModelNamespace()::detail()->findOrFail($id));
         } catch (\Exception $exception) {
-            $this->errorHandler($exception);
+            $this->apiErrorHandler($exception);
         }
     }
 }
