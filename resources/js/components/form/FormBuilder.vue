@@ -2,6 +2,7 @@
 import FieldBuilder from "@/components/form/FieldBuilder.vue";
 import { onMounted } from "vue";
 import { useGeneralStore } from "@/store/general";
+import { useForm } from "@/composables/useForm";
 
 const props = defineProps({
     id: {
@@ -14,34 +15,17 @@ const props = defineProps({
 
 const generalStore = useGeneralStore();
 
-generalStore.setModel(props.model)
+const { fetchFormData, submitForm } = useForm();
 
-generalStore.setId(props.id)
+generalStore.setModel(props.model);
+
+generalStore.setId(props.id);
 
 // fetch form fields and model
-onMounted(() => {
-    generalStore.fetchFormBuilder().then(async () => {
-        if (generalStore.id) {
-            // edit page
-           await generalStore.fetchSingle();
-        }
-
-        generalStore.setLoaded(true)
-    });
-});
-
-const submitForm = (event) => {
-    event.preventDefault();
-
-    generalStore.submitForm();
-};
+onMounted(fetchFormData);
 </script>
 <template>
-    <form
-        v-if="generalStore.loaded"
-        id="form-builder"
-        @submit="submitForm"
-    >
+    <form v-if="generalStore.loaded" id="form-builder" @submit="submitForm">
         <!-- Title -->
         <h1>{{ generalStore.formBuilder.title }}</h1>
         <!-- Subtitle -->
@@ -53,6 +37,6 @@ const submitForm = (event) => {
             v-for="field in generalStore.formBuilder.fields"
             :field="field"
         />
-        <button>Uložiť</button>
+        <button type="submit" class="btn btn-primary">Uložiť</button>
     </form>
 </template>
