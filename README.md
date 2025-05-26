@@ -1,10 +1,4 @@
-# Laravel Projekt
-
-Tento projekt je postavený na frameworku Laravel a obsahuje vlastný artisan príkaz pre jednoduché spustenie všetkých potrebných krokov pre uvedenie aplikácie do prevádzky.
-
-## ✅ Rýchly štart
-
-### 1. Klonovanie repozitára
+### Kroky pre nastavenie projektu
 
 ```bash
 # 1. Klonovanie repozitár
