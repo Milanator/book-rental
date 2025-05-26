@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class BookController extends AbstractController
 {
-    public static function getListingCacheKey(): string
+    public static function getCacheKey(): string
     {
         return 'book_listing';
     }

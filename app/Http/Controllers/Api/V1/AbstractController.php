@@ -14,7 +14,8 @@ abstract class AbstractController extends Controller
 
     protected const int CACHE_TTL = 3600; // 1 hour
 
-    abstract public static function getListingCacheKey(): string;
+    // listing cache key
+    abstract public static function getCacheKey(): string;
 
     abstract public static function getModelName(): string;
 
@@ -46,8 +47,8 @@ abstract class AbstractController extends Controller
             $resource = "\App\\Http\\Resources\\V1\\{$this->getModelName()}\\IndexResource";
 
             if ($this->isFirstPage($request)) {
-                // cached 1. page for fast load
-                $data = Cache::remember($this->getListingCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
+                // cached 1. page for fast load - on modification forget data in observer
+                $data = Cache::remember($this->getCacheKey(), self::CACHE_TTL, fn() => $this->getListingData($request));
             } else {
                 $data = $this->getListingData($request);
             }

@@ -31,7 +31,7 @@ onMounted(() => bookStore.fetchAll());
                         <td>{{ book.author }}</td>
                         <td>{{ book.is_borrowed }}</td>
                         <td>
-                            <a href="#" class="px-2"> Upraviť </a>
+                            <a :href="`/book/${book.id}/edit`" class="px-2"> Upraviť </a>
                             <a href="#" class="px-2"> Odstrániť </a>
                             <a
                                 v-if="book.is_borrowed"

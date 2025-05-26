@@ -2,18 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-class BookController extends BaseController
+class BookController extends AbstractController
 {
-    public function index(Request $request)
+    public static function getModelName(): string
     {
-        try {
-            return $this->view('BookIndex');
-        } catch (\Exception $exception) {
-            report($exception);
-
-            abort(500);
-        }
+        return 'Book';
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class AuthorController extends AbstractController
 {
-    public static function getListingCacheKey(): string
+    public static function getCacheKey(): string
     {
         return 'author_listing';
     }

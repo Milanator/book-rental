@@ -10,11 +10,11 @@ class BookObserver
 {
     public function saved(Book $book): void
     {
-        Cache::forget(BookController::getListingCacheKey());
+        Cache::forget(BookController::getCacheKey());
     }
 
     public function deleted(Book $book): void
     {
-        Cache::forget(BookController::getListingCacheKey());
+        Cache::forget(BookController::getCacheKey());
     }
 }

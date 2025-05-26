@@ -2,11 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 
-class BaseController extends Controller
+abstract class AbstractController extends Controller
 {
+    abstract public static function getModelName(): string;
+
+    public function index(Request $request)
+    {
+        try {
+            return $this->view($this->getModelName() . 'Index');
+        } catch (\Exception $exception) {
+            report($exception);
+
+            abort(500);
+        }
+    }
+
     /**
      * @param string $component
      * @param array $props
