@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\Boolean;
+use App\Http\Requests\Book\SaveRequest;
 use App\Observers\BookObserver;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -21,6 +23,13 @@ class Book extends Model
         'is_borrowed'
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'is_borrowed' => Boolean::class,
+        ];
+    }
+
     /**
      * Relations
      */
@@ -29,10 +38,12 @@ class Book extends Model
         return $this->belongsTo(Author::class);
     }
 
-    public static function store(): Model
+    /**
+     * Static
+     */
+    public static function store(SaveRequest $request): Model
     {
-
-        dd('test');
+        return Book::create($request->rData());
     }
 
     /**

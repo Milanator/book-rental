@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Form\Fields\Checkbox;
+use App\Form\Fields\Select;
 use App\Form\Fields\Text;
 use App\Http\Requests\Book\SaveRequest;
+use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,12 +24,15 @@ class BookController extends AbstractController
 
     protected function getFormSchema(?Model $model = null): array
     {
+        $authors = Author::select('id', 'name', 'surname')->get()->pluck('full_name', 'id');
+
         return [
             'title' => !$model ? __('Create book') : __('Edit book', ['title' => $model->title]),
             'submit_url' => !$model ? route('api.v1.book.store') : route('api.v1.book.update', ['book' => $model]),
             'fields' => [
                 (new Text('title', __('Title')))->required()->placeholder(__('Book title')),
                 (new Checkbox('is_borrowed', __('Is borrowed'))),
+                (new Select('author_id', __('Author')))->options($authors->toArray()),
             ]
         ];
     }
