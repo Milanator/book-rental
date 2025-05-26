@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('author_id')->onDelete('CASCADE');
-            $table->string('title');
+            $table->string('title')->index();
             $table->boolean('is_borrowed')->default(0);
             $table->timestamps();
         });
