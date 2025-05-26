@@ -12,6 +12,7 @@ use Illuminate\Database\{
     Eloquent\Relations\BelongsTo,
     Eloquent\Attributes\Scope,
     Eloquent\Attributes\ObservedBy,
+    Eloquent\Casts\Attribute,
 };
 
 #[ObservedBy([BookObserver::class])]
@@ -21,6 +22,10 @@ class Book extends Model
         'author_id',
         'title',
         'is_borrowed'
+    ];
+
+    protected $appends = [
+        'is_borrowed_text'
     ];
 
     protected function casts(): array
@@ -50,6 +55,14 @@ class Book extends Model
     public static function modify(SaveRequest $request, int $id): void
     {
         Book::whereId($id)->first()->update($request->rData());
+    }
+
+    /**
+     * Accessors
+     */
+    protected function isBorrowedText(): Attribute
+    {
+        return Attribute::make(get: fn() => $this->is_borrowed ? __('Yes') : __('No'));
     }
 
     /**

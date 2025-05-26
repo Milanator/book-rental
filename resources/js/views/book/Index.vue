@@ -50,7 +50,7 @@ const borrowBook = (id) => {
                     <th scope="row">{{ book.id }}</th>
                     <td>{{ book.title }}</td>
                     <td>{{ book.author }}</td>
-                    <td>{{ book.is_borrowed }}</td>
+                    <td>{{ book.is_borrowed_text }}</td>
                     <td>
                         <a :href="`/book/${book.id}/edit`" class="px-2">
                             Upraviť
