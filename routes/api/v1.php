@@ -5,12 +5,15 @@ use App\Http\Controllers\Api\V1\BookController;
 use Illuminate\Support\Facades\Route;
 
 // Book
-Route::get('/book/form-builder/{id}', [BookController::class, 'formBuilder'])->name('formBuilderOnEdit'); // on edit
-Route::get('/book/form-builder', [BookController::class, 'formBuilder'])->name('formBuilderOnCreate'); // on create
+Route::get('/book/form-builder/{id}', [BookController::class, 'formBuilder']); // on edit
+Route::get('/book/form-builder', [BookController::class, 'formBuilder']); // on create
 
-Route::get('/book/{book}/borrow', [BookController::class, 'borrow'])->name('borrow');
+Route::get('/book/{book}/borrow', [BookController::class, 'borrow']);
 
 Route::apiResource('book', BookController::class)->only(['index', 'store', 'update', 'show', 'destroy']);
 
 // Author
-Route::apiResource('author', AuthorController::class)->only(['index']);
+Route::get('/author/form-builder/{id}', [AuthorController::class, 'formBuilder']); // on edit
+Route::get('/author/form-builder', [AuthorController::class, 'formBuilder']); // on create
+
+Route::apiResource('author', AuthorController::class)->only(['index', 'show', 'store', 'update', 'destroy']);

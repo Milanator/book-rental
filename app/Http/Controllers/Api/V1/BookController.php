@@ -27,8 +27,11 @@ class BookController extends AbstractController
     protected function getFormSchema(?Model $model = null): array
     {
         return [
-            'title' => !$model ? __('Create book') : __('Edit book'),
             'submit_url' => !$model ? route('api.v1.book.store') : route('api.v1.book.update', ['book' => $model]),
+            'breadcrumb' => [
+                ['label' => __('Books'), 'url' => route('book.index')],
+                ['label' => !$model ? __('Create book') : __('Edit book')]
+            ],
             'fields' => [
                 (new Text('title', __('Title')))->required()->placeholder(__('Book title')),
                 (new Checkbox('is_borrowed', __('Is borrowed'))),

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\Author\SaveRequest;
 use App\Observers\AuthorObserver;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -47,6 +48,17 @@ class Author extends Model
     public static function getOptions(): array
     {
         return Author::select('id', 'name', 'surname')->get()->pluck('full_name', 'id')->toArray();
+    }
+
+    public static function store(SaveRequest $request): Model
+    {
+        return Author::create($request->rData());
+    }
+
+    // update model - named because of method name collision
+    public static function modify(SaveRequest $request, int $id): void
+    {
+        Author::whereId($id)->first()->update($request->rData());
     }
 
     /**

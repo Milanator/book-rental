@@ -13,9 +13,8 @@ class FormBuilder implements FormFieldInterface
     public function toArray(): array
     {
         return [
-            'title' => $this->formSchema['title'],
+            'breadcrumb' => $this->formSchema['breadcrumb'] ?? [],
             'submit_url' => $this->formSchema['submit_url'],
-            'subtitle' => $this->formSchema['subtitle'] ?? null,
             'fields' => array_map(fn($field) => $field->toArray(), $this->formSchema['fields']),
         ];
     }

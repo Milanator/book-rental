@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Book;
+namespace App\Http\Requests\Author;
 
 use App\Http\Requests\AbstractRequest;
 
@@ -9,14 +9,13 @@ class SaveRequest extends AbstractRequest
     public function rules(): array
     {
         return [
-            'title' => ['required'],
-            'is_borrowed' => [],
-            'author_id' => ['required'],
+            'name' => ['required'],
+            'surname' => ['required'],
         ];
     }
 
     public function rData(): array
     {
-        return $this->only(['title', 'is_borrowed', 'author_id']);
+        return $this->only(['name', 'surname']);
     }
 }

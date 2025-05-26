@@ -26,6 +26,27 @@ onMounted(fetchFormData);
 </script>
 <template>
     <form v-if="generalStore.loaded" id="form-builder" @submit="submitForm">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <template
+                    v-for="breadcrumb in generalStore.formBuilder.breadcrumb"
+                >
+                    <!-- Link -->
+                    <li v-if="breadcrumb.url" class="breadcrumb-item">
+                        <a :href="breadcrumb.url">{{ breadcrumb.label }}</a>
+                    </li>
+                    <!-- Label -->
+                    <li
+                        v-else
+                        class="breadcrumb-item active"
+                        aria-current="page"
+                    >
+                        {{ breadcrumb.label }}
+                    </li>
+                </template>
+            </ol>
+        </nav>
+
         <!-- Title -->
         <h1>{{ generalStore.formBuilder.title }}</h1>
         <!-- Subtitle -->

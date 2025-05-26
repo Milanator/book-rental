@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Form\Fields\Text;
+use App\Http\Requests\Author\SaveRequest;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
 class AuthorController extends AbstractController
 {
@@ -20,33 +21,25 @@ class AuthorController extends AbstractController
     protected function getFormSchema(?Model $model = null): array
     {
         return [
-            'title' => null,
-            'submit_url' => null,
-            'fields' => []
+            'submit_url' => !$model ? route('api.v1.author.store') : route('api.v1.author.update', ['author' => $model]),
+            'breadcrumb' => [
+                ['label' => __('Authors'), 'url' => route('author.index')],
+                ['label' => !$model ? __('Create author') : __('Edit author')]
+            ],
+            'fields' => [
+                (new Text('name', __('Firstname')))->required(),
+                (new Text('surname', __('Surname')))->required(),
+            ]
         ];
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(SaveRequest $request)
     {
-        //
+        return parent::storeModel($request);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(SaveRequest $request, int $id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return parent::updateModel($request, $id);
     }
 }
